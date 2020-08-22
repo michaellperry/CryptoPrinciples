@@ -11,7 +11,7 @@ public class SymmetricEncryptionTest {
 
   @Test
   public void testGenerateRandomAESKey() throws Exception {
-    SecretKey key = Crypto.generateAesKey();
+    SecretKey key = SymmetricHelpers.generateAesKey();
 
     assertEquals("AES", key.getAlgorithm());
     assertEquals(32, key.getEncoded().length);
@@ -21,11 +21,11 @@ public class SymmetricEncryptionTest {
   public void testEncryptAMessageWithAES() throws Exception {
     String inputMessage = "Alice knows Bob's secret.";
 
-    SecretKey key = Crypto.generateAesKey();
-    IvParameterSpec iv = Crypto.generateInitializationVector();
+    SecretKey key = SymmetricHelpers.generateAesKey();
+    IvParameterSpec iv = SymmetricHelpers.generateInitializationVector();
 
-    byte[] cipertext = Crypto.encryptWithAes(inputMessage, key, iv);
-    String outputMessage = Crypto.decryptWithAes(cipertext, key, iv);
+    byte[] cipertext = SymmetricHelpers.encryptWithAes(inputMessage, key, iv);
+    String outputMessage = SymmetricHelpers.decryptWithAes(cipertext, key, iv);
 
     assertEquals(inputMessage, outputMessage);
   }

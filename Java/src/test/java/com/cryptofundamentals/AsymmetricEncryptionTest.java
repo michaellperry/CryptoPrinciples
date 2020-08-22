@@ -16,7 +16,7 @@ public class AsymmetricEncryptionTest {
 
     @Test
     public void testGenerateRSAKeyPair() throws Exception {
-        KeyPair keyPair = Crypto.generateRsaKey();
+        KeyPair keyPair = AsymmetricHelpers.generateRsaKey();
 
         assertEquals("RSA", keyPair.getPublic().getAlgorithm());
         assertTrue(keyPair.getPublic().getEncoded().length > 2048 / 8);
@@ -25,22 +25,22 @@ public class AsymmetricEncryptionTest {
 
     @Test
     public void testEncryptSymmetricKey() throws Exception {
-        KeyPair keyPair = Crypto.generateRsaKey();
+        KeyPair keyPair = AsymmetricHelpers.generateRsaKey();
 
         PublicKey publicKey = keyPair.getPublic();
         PrivateKey privateKey = keyPair.getPrivate();
 
-        SecretKey key = Crypto.generateAesKey();
+        SecretKey key = SymmetricHelpers.generateAesKey();
 
-        byte[] encryptedKey = Crypto.encryptWithRsa(publicKey, key);
-        byte[] decryptedKey = Crypto.decryptWithRsa(privateKey, encryptedKey);
+        byte[] encryptedKey = AsymmetricHelpers.encryptWithRsa(publicKey, key);
+        byte[] decryptedKey = AsymmetricHelpers.decryptWithRsa(privateKey, encryptedKey);
 
         assertArrayEquals(key.getEncoded(), decryptedKey);
     }
 
     @Test
     public void testSignMessage() throws Exception {
-        KeyPair keyPair = Crypto.generateRsaKey();
+        KeyPair keyPair = AsymmetricHelpers.generateRsaKey();
 
         PublicKey publicKey = keyPair.getPublic();
         PrivateKey privateKey = keyPair.getPrivate();
@@ -48,8 +48,8 @@ public class AsymmetricEncryptionTest {
         String message = "Alice knows Bob's secret.";
         byte[] messageBytes = message.getBytes();
 
-        byte[] signatureBytes = Crypto.signMessage(privateKey, messageBytes);
-        boolean verified = Crypto.verifySignature(publicKey, messageBytes, signatureBytes);
+        byte[] signatureBytes = AsymmetricHelpers.signMessage(privateKey, messageBytes);
+        boolean verified = AsymmetricHelpers.verifySignature(publicKey, messageBytes, signatureBytes);
 
         assertTrue(verified);
     }
