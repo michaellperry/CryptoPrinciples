@@ -4,35 +4,40 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import javax.crypto.Cipher;
+import javax.crypto.CipherInputStream;
+import javax.crypto.CipherOutputStream;
+import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.Security;
+
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
 /**
  * Unit test for simple App.
  */
 public class AppTest 
     extends TestCase
 {
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public AppTest( String testName )
-    {
-        super( testName );
-    }
+    static {
+		Security.addProvider(new BouncyCastleProvider());
+	}
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
+    public void testGenerateRandomAESKey() throws Exception
     {
-        return new TestSuite( AppTest.class );
-    }
+		KeyGenerator keyGenerator = KeyGenerator.getInstance("AES", "BC");
+		keyGenerator.init(256);
+		SecretKey key = keyGenerator.generateKey();
 
-    /**
-     * Rigourous Test :-)
-     */
-    public void testApp()
-    {
-        assertTrue( true );
+		assertEquals("AES", key.getAlgorithm());
+		assertEquals(32, key.getEncoded().length);
     }
 }
