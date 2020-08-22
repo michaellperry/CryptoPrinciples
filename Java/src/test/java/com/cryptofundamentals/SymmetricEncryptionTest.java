@@ -1,5 +1,7 @@
 package com.cryptofundamentals;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -7,17 +9,18 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.security.SecureRandom;
 import java.security.Security;
+
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
-import junit.framework.TestCase;
+
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Test;
 
-public class SymmetricEncryptionTest extends TestCase {
+public class SymmetricEncryptionTest {
 
   static {
     Security.addProvider(new BouncyCastleProvider());
