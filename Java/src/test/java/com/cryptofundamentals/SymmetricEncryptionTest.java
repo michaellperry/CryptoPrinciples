@@ -15,6 +15,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import junit.framework.TestCase;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.junit.Test;
 
 public class SymmetricEncryptionTest extends TestCase {
 
@@ -22,6 +23,7 @@ public class SymmetricEncryptionTest extends TestCase {
     Security.addProvider(new BouncyCastleProvider());
   }
 
+  @Test
   public void testGenerateRandomAESKey() throws Exception {
     var keyGenerator = KeyGenerator.getInstance("AES", "BC");
     keyGenerator.init(256);
@@ -31,6 +33,7 @@ public class SymmetricEncryptionTest extends TestCase {
     assertEquals(32, key.getEncoded().length);
   }
 
+  @Test
   public void testEncryptAMessageWithAES() throws Exception {
     var message = "Alice knows Bob's secret.";
 
@@ -49,12 +52,7 @@ public class SymmetricEncryptionTest extends TestCase {
     assertEquals(message, actualMessage);
   }
 
-  private byte[] encryptWithAes(
-    String message,
-    SecretKey key,
-    IvParameterSpec iv
-  )
-    throws Exception {
+  private byte[] encryptWithAes(String message, SecretKey key, IvParameterSpec iv) throws Exception {
     var out = new ByteArrayOutputStream();
     var aes = Cipher.getInstance("AES/CBC/PKCS5Padding", "BC");
     aes.init(Cipher.ENCRYPT_MODE, key, iv);
@@ -70,12 +68,7 @@ public class SymmetricEncryptionTest extends TestCase {
     return out.toByteArray();
   }
 
-  private String decryptWithAes(
-    byte[] cipertext,
-    SecretKey key,
-    IvParameterSpec iv
-  )
-    throws Exception {
+  private String decryptWithAes(byte[] cipertext, SecretKey key, IvParameterSpec iv) throws Exception {
     var in = new ByteArrayInputStream(cipertext);
     var aes = Cipher.getInstance("AES/CBC/PKCS5Padding", "BC");
     aes.init(Cipher.DECRYPT_MODE, key, iv);
