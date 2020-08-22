@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.MessageDigest;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
@@ -18,7 +19,9 @@ import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
@@ -27,6 +30,29 @@ public class Crypto {
     static {
         Security.addProvider(new BouncyCastleProvider());
     }
+
+    public static byte[] computeHash(String message) throws Exception {
+        var sha512 = MessageDigest.getInstance("SHA512", "BC");
+        sha512.update(message.getBytes());
+        return sha512.digest();
+    }
+
+	public static byte[] generateSalt() {
+        var random = new SecureRandom();
+        var bytes = new byte[8];
+        random.nextBytes(bytes);
+		return bytes;
+	}
+
+	public static byte[] deriveKey(String passphrase, byte[] salt) throws Exception {
+        var pbkdf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256", "BC");
+        int iterationCount = 10000;
+        int keyLength = 256;
+        var keyMaterial = new PBEKeySpec(passphrase.toCharArray(),
+            salt, iterationCount, keyLength);
+		SecretKey secretKey = pbkdf.generateSecret(keyMaterial);
+        return secretKey.getEncoded();
+	}
 
     public static SecretKey generateAesKey() throws Exception {
         var keyGenerator = KeyGenerator.getInstance("AES", "BC");
