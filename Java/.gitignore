@@ -1,0 +1,4 @@
+.vscode/
+classes/
+target/
+*.versionsBackup
