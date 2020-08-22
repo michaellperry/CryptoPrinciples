@@ -39,7 +39,7 @@ public class Crypto {
 
 	public static byte[] generateSalt() {
         var random = new SecureRandom();
-        var bytes = new byte[8];
+        var bytes = new byte[16];
         random.nextBytes(bytes);
 		return bytes;
 	}
