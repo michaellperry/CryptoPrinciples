@@ -8,20 +8,32 @@ namespace CryptoHelpers
         public static byte[] EncryptWithAes(string message, SymmetricAlgorithm aes)
         {
             MemoryStream memoryStream = new MemoryStream();
+            var cryptoStream = new CryptoStream(
+                memoryStream,
+                aes.CreateEncryptor(),
+                CryptoStreamMode.Write);
 
-            using (var writer = new StreamWriter(memoryStream))
+            using (var writer = new StreamWriter(cryptoStream))
             {
                 writer.Write(message);
             }
 
-            return null;
+            return memoryStream.ToArray();
         }
 
         public static string DecryptWithAes(byte[] ciphertext, byte[] key, byte[] iv)
         {
-            MemoryStream memoryStream = new MemoryStream(ciphertext);
+            var aes = SymmetricAlgorithm.Create("AES");
+            aes.Key = key;
+            aes.IV = iv;
 
-            using (var reader = new StreamReader(memoryStream))
+            MemoryStream memoryStream = new MemoryStream(ciphertext);
+            var cryptoStream = new CryptoStream(
+                memoryStream,
+                aes.CreateDecryptor(),
+                CryptoStreamMode.Read);
+
+            using (var reader = new StreamReader(cryptoStream))
             {
                 return reader.ReadToEnd();
             }
