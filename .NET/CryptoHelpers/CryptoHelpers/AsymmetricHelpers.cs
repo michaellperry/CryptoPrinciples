@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.OpenSsl;
+using System;
+using System.IO;
 using System.Security.Cryptography;
 
 namespace CryptoHelpers
@@ -34,15 +38,15 @@ namespace CryptoHelpers
 
         private static RSAParameters CreateParameters(byte[] publicKey)
         {
-            var modulus = new byte[2048 / 8];
-            Array.Copy(publicKey, 9, modulus, 0, 2048 / 8);
-            var exponent = new byte[3];
-            Array.Copy(publicKey, 11 + 2048 / 8, exponent, 0, 3);
+            var pem = "-----BEGIN RSA PUBLIC KEY-----\n" + Convert.ToBase64String(publicKey) + "\n-----END RSA PUBLIC KEY-----";
+            var textReader = new StringReader(pem);
+            PemReader reader = new PemReader(textReader);
+            var parameters = (RsaKeyParameters)reader.ReadObject();
 
             return new RSAParameters
             {
-                Exponent = exponent,
-                Modulus = modulus
+                Exponent = parameters.Exponent.ToByteArray(),
+                Modulus = parameters.Modulus.ToByteArray()
             };
         }
     }
