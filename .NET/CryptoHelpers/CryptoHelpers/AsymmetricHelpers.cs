@@ -1,9 +1,9 @@
-﻿using Org.BouncyCastle.Asn1;
-using Org.BouncyCastle.Crypto.Parameters;
+﻿using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.OpenSsl;
 using System;
 using System.IO;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace CryptoHelpers
 {
@@ -38,7 +38,7 @@ namespace CryptoHelpers
 
         private static RSAParameters CreateParameters(byte[] publicKey)
         {
-            var pem = "-----BEGIN RSA PUBLIC KEY-----\n" + Convert.ToBase64String(publicKey) + "\n-----END RSA PUBLIC KEY-----";
+            var pem = WritePEM("RSA PUBLIC KEY", publicKey);
             var textReader = new StringReader(pem);
             PemReader reader = new PemReader(textReader);
             var parameters = (RsaKeyParameters)reader.ReadObject();
@@ -48,6 +48,19 @@ namespace CryptoHelpers
                 Exponent = parameters.Exponent.ToByteArray(),
                 Modulus = parameters.Modulus.ToByteArray()
             };
+        }
+
+        private static string WritePEM(string name, byte[] bytes)
+        {
+            var builder = new StringBuilder();
+            builder.AppendLine($"-----BEGIN {name}-----");
+            string base64 = Convert.ToBase64String(bytes);
+            for (int offset = 0; offset < base64.Length; offset += 64)
+            {
+                builder.AppendLine(base64.Substring(offset, Math.Min(base64.Length - offset, 64)));
+            }
+            builder.AppendLine($"-----END {name}-----");
+            return builder.ToString();
         }
     }
 }
