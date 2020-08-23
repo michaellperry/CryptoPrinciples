@@ -16,37 +16,42 @@ public class AsymmetricHelpers {
     }
 
     public static KeyPair generateRsaKey() throws Exception {
-
-        return null;
+        var generator = KeyPairGenerator.getInstance("RSA", "BC");
+        generator.initialize(2048);
+        return generator.generateKeyPair();
     }
 
     public static byte[] encryptWithRsa(PublicKey publicKey, SecretKey key) throws Exception {
 
-        var rsa = Cipher.getInstance("SelectCipher", "BC");
+        var rsa = Cipher.getInstance("RSA/NONE/OAEPWithSHA512AndMGF1Padding", "BC");
         rsa.init(Cipher.ENCRYPT_MODE, publicKey);
 
-        return null;
+        return rsa.doFinal(key.getEncoded());
     }
 
     public static byte[] decryptWithRsa(PrivateKey privateKey, byte[] encryptedKey) throws Exception {
 
-        var rsa = Cipher.getInstance("SelectCipher", "BC");
+        var rsa = Cipher.getInstance("RSA/NONE/OAEPWithSHA512AndMGF1Padding", "BC");
         rsa.init(Cipher.DECRYPT_MODE, privateKey);
 
-        return null;
+        return rsa.doFinal(encryptedKey);
     }
 
     public static byte[] signMessage(PrivateKey privateKey, byte[] messageBytes) throws Exception {
 
-        var signature = Signature.getInstance("SelectAlgorithm", "BC");
+        var signature = Signature.getInstance("SHA512withRSA", "BC");
+        signature.initSign(privateKey);
+        signature.update(messageBytes);
 
-        return null;
+        return signature.sign();
     }
 
     public static boolean verifySignature(PublicKey publicKey, byte[] messageBytes, byte[] signatureBytes) throws Exception {
 
-        var signature = Signature.getInstance("SelectAlgorithm", "BC");
+        var signature = Signature.getInstance("SHA512withRSA", "BC");
+        signature.initVerify(publicKey);
+        signature.update(messageBytes);
 
-        return false;
+        return signature.verify(signatureBytes);
     }
 }
