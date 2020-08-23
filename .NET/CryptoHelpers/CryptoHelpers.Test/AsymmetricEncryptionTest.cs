@@ -27,7 +27,7 @@ namespace CryptoHelpers.Test
         public void EncryptSymmetricKey()
         {
             var rsa = RSA.Create(2048);
-            var publicKey = rsa.ExportRSAPublicKey();
+            var publicKey = AsymmetricHelpers.WritePEM("RSA PUBLIC KEY", rsa.ExportRSAPublicKey());
 
             var key = SymmetricAlgorithm.Create("AES").Key;
 
@@ -41,7 +41,7 @@ namespace CryptoHelpers.Test
         public void SignMessage()
         {
             var rsa = RSA.Create(2048);
-            var publicKey = rsa.ExportRSAPublicKey();
+            var publicKey = AsymmetricHelpers.WritePEM("RSA PUBLIC KEY", rsa.ExportRSAPublicKey());
 
             string message = "Alice knows Bob's secret.";
             byte[] messageBytes = Encoding.UTF8.GetBytes(message);
