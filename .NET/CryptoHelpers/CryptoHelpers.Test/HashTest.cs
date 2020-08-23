@@ -1,6 +1,5 @@
-using System;
-using Xunit;
 using FluentAssertions;
+using Xunit;
 
 namespace CryptoHelpers.Test
 {
