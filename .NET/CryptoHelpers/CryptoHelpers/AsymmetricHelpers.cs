@@ -9,32 +9,14 @@ namespace CryptoHelpers
 {
     public class AsymmetricHelpers
     {
-        public static string WritePEM(string kind, byte[] bytes)
-        {
-            var builder = new StringBuilder();
-            builder.AppendLine($"-----BEGIN {kind}-----");
-            string base64 = Convert.ToBase64String(bytes);
-            for (int offset = 0; offset < base64.Length; offset += 64)
-            {
-                builder.AppendLine(base64.Substring(offset, Math.Min(base64.Length - offset, 64)));
-            }
-            builder.AppendLine($"-----END {kind}-----");
-            return builder.ToString();
-        }
-
         public static byte[] EncryptWithRsa(string publicKey, byte[] plaintext)
         {
-            var parameters = CreateParameters(publicKey);
-            var rsa = RSA.Create(parameters);
-            var ciphertext = rsa.Encrypt(plaintext, RSAEncryptionPadding.OaepSHA512);
-
-            return ciphertext;
+            return null;
         }
 
         public static byte[] DecryptWithRsa(RSA rsa, byte[] ciphertext)
         {
-            var plaintext = rsa.Decrypt(ciphertext, RSAEncryptionPadding.OaepSHA512);
-            return plaintext;
+            return null;
         }
 
         public static byte[] SignMessage(RSA rsa, byte[] messageBytes)
@@ -46,7 +28,7 @@ namespace CryptoHelpers
         {
             var parameters = CreateParameters(publicKey);
             var rsa = RSA.Create(parameters);
-            return rsa.VerifyData(messageBytes, signatureBytes, HashAlgorithmName.SHA512, RSASignaturePadding.Pkcs1);
+            return false;
         }
 
         private static RSAParameters CreateParameters(string publicKey)
@@ -60,6 +42,19 @@ namespace CryptoHelpers
                 Exponent = parameters.Exponent.ToByteArray(),
                 Modulus = parameters.Modulus.ToByteArray()
             };
+        }
+
+        public static string WritePEM(string kind, byte[] bytes)
+        {
+            var builder = new StringBuilder();
+            builder.AppendLine($"-----BEGIN {kind}-----");
+            string base64 = Convert.ToBase64String(bytes);
+            for (int offset = 0; offset < base64.Length; offset += 64)
+            {
+                builder.AppendLine(base64.Substring(offset, Math.Min(base64.Length - offset, 64)));
+            }
+            builder.AppendLine($"-----END {kind}-----");
+            return builder.ToString();
         }
     }
 }

@@ -10,17 +10,15 @@ namespace CryptoHelpers.Test
         [Fact]
         public void GenerateRsaKeyPair()
         {
-            var rsa = RSA.Create(2048);
-
-            rsa.KeySize.Should().Be(2048);
+            int keySize = 0;
+            keySize.Should().Be(2048);
         }
 
         [Fact]
         public void SharePublicKey()
         {
-            var rsa = RSA.Create(2048);
-            var publicKey = rsa.ExportRSAPublicKey();
-            publicKey.Length.Should().Be((2048 + 112) / 8);
+            byte[] publicKey = null;
+            publicKey.Length.Should().Be((2048 + 24 + 88) / 8);
         }
 
         [Fact]
