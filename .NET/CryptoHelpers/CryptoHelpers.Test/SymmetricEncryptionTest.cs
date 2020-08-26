@@ -9,10 +9,8 @@ namespace CryptoHelpers.Test
         [Fact]
         public void GenerateRandomAESKey()
         {
-            var aes = SymmetricAlgorithm.Create("AES");
-
-            byte[] key = aes.Key;
-            byte[] iv = aes.IV;
+            byte[] key = null;
+            byte[] iv = null;
 
             key.Length.Should().Be(32);
             iv.Length.Should().Be(16);

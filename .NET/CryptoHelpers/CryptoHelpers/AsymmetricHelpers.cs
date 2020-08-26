@@ -11,14 +11,12 @@ namespace CryptoHelpers
     {
         public static byte[] EncryptWithRsa(string publicKey, byte[] plaintext)
         {
-            RSAParameters parameters = CreateParameters(publicKey);
-            var rsa = RSA.Create(parameters);
-            return rsa.Encrypt(plaintext, RSAEncryptionPadding.OaepSHA512);
+            return null;
         }
 
         public static byte[] DecryptWithRsa(RSA rsa, byte[] ciphertext)
         {
-            return rsa.Decrypt(ciphertext, RSAEncryptionPadding.OaepSHA512);
+            return null;
         }
 
         public static byte[] SignMessage(RSA rsa, byte[] messageBytes)
@@ -30,8 +28,7 @@ namespace CryptoHelpers
         {
             var parameters = CreateParameters(publicKey);
             var rsa = RSA.Create(parameters);
-            return rsa.VerifyData(messageBytes, signatureBytes, HashAlgorithmName.SHA512,
-                RSASignaturePadding.Pkcs1);
+            return false;
         }
 
         private static RSAParameters CreateParameters(string publicKey)
